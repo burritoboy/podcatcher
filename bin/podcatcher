@@ -87,22 +87,22 @@ opt = OpenStruct.new
 opt.PLAYLIST_TYPES = [:m3u, :smil, :pls, :asx, :tox, :xspf]
 opt.playlist_type = opt.PLAYLIST_TYPES[0]
 opt.size = 512
-opt.content_type = Regexp.new '' 
+opt.content_type = Regexp.new ''
 opt.DESCRIPTION = <<END
 
 Armangil's podcatcher is a podcast client for the command line.
-It can download any type of content enclosed in RSS or Atom files, such as 
-MP3 or other audio content, video and images. A search function for 
-subscribing to feeds is also included. It provides several download 
-strategies, supports BitTorrent, offers cache management, and generates 
-playlists for media player applications. 
+It can download any type of content enclosed in RSS or Atom files, such as
+MP3 or other audio content, video and images. A search function for
+subscribing to feeds is also included. It provides several download
+strategies, supports BitTorrent, offers cache management, and generates
+playlists for media player applications.
 
-As argument, it accepts feeds (RSS or Atom) or subscription lists 
+As argument, it accepts feeds (RSS or Atom) or subscription lists
 (OPML or iTunes PCAST), in the form of filenames or URLs (HTTP or FTP).
-Alternatively, it accepts one feed or subscription list from the standard 
+Alternatively, it accepts one feed or subscription list from the standard
 input.
 
-BitTorrent is supported both internally (through the RubyTorrent library) 
+BitTorrent is supported both internally (through the RubyTorrent library)
 and externally (.torrent files are downloaded, but the user handles
 them using a BitTorrent application). The latter is currently the most
 reliable method, as RubyTorrent is still in alpha phase.
@@ -112,7 +112,7 @@ target different directories.
 
 Visit http://podcatcher.rubyforge.org/ for more information.
 
-Usage: #{$0} [options] [arguments] 
+Usage: #{$0} [options] [arguments]
 END
 
 opt.dir = Pathname.new Dir.pwd
@@ -141,13 +141,13 @@ opt.horizon=nil
 opt.language=[]
 opt.restricted_names = true
 
-arguments = [] 
+arguments = []
 
 option_parser = OptionParser.new() do |c|
 	c.banner = opt.DESCRIPTION
 	c.separator ""
 	c.separator "Options:"
-	c.on("-d", "--dir DIR", 
+	c.on("-d", "--dir DIR",
 		"Directory for storing application state.",
 		"Default value is current directory.\n") do |e|
 		contained=false
@@ -196,10 +196,10 @@ option_parser = OptionParser.new() do |c|
 			opt.cachedir = opt.dir + opt.CACHEDIR
 		end
 	end
-	c.on("-D", "--cachedir DIR", 
+	c.on("-D", "--cachedir DIR",
 		"Directory for storing downloaded content.",
 		"Default value is the '#{opt.CACHEDIR}' subdirectory",
-		"of the state directory (specified by ", 
+		"of the state directory (specified by ",
 		"the --dir option).",
 		"This option is ignored if this directory",
 		"is inside the state directory, or if the",
@@ -232,8 +232,8 @@ option_parser = OptionParser.new() do |c|
 		#accept cache directory
 		opt.cachedir=Pathname.new(Dir.pwd)+e
 	end
-	c.on("-s", "--size SIZE", 
-		"Size, in megabytes, of the cache directory", 
+	c.on("-s", "--size SIZE",
+		"Size, in megabytes, of the cache directory",
 		"(specified by the --cachedir option).",
 		"0 means unbounded. Default value is #{opt.size}.",
 		"This option also sets the upper limit for",
@@ -245,17 +245,17 @@ option_parser = OptionParser.new() do |c|
 		opt.size = e.to_i
 		opt.size = nil if opt.size<1
 	end
-	c.on("-e", "--[no-]empty", 
-		"Empty the cache directory before", 
+	c.on("-e", "--[no-]empty",
+		"Empty the cache directory before",
 		"downloading content.\n") do |e|
 		opt.empty = e
 	end
-	c.on("-p", "--[no-]perfeed", 
-		"Create one subdirectory per feed", 
+	c.on("-p", "--[no-]perfeed",
+		"Create one subdirectory per feed",
 		"in the cache directory.\n") do |e|
 		opt.per_feed = e
 	end
-	c.on("-S", "--strategy S", opt.STRATEGIES, 
+	c.on("-S", "--strategy S", opt.STRATEGIES,
 		"Strategy to use when downloading content:",
 		"* back_catalog: download any content that",
 		" has not been downloaded before; prefer",
@@ -272,7 +272,7 @@ option_parser = OptionParser.new() do |c|
 		" content file per feed),",
 		"* chron: download in chronological order",
 		" any content that has not been downloaded ",
-		" before; this is useful for audiobook", 
+		" before; this is useful for audiobook",
 		" podcasts etc (may download more than one",
 		" content file per feed),",
 		"* chron_one: download the oldest content of",
@@ -280,30 +280,30 @@ option_parser = OptionParser.new() do |c|
 		" downloaded, ",
 		"* chron_all: download all content in ",
 		" chronological order, even if the content",
-		" has already been downloaded (may download", 
+		" has already been downloaded (may download",
 		" more than one content file per feed), ",
 		"* new: download the most recent content ",
 		" of each feed, if it has not already been ",
-		" downloaded (DEPRECATED: use 'one' instead", 
+		" downloaded (DEPRECATED: use 'one' instead",
 		" of 'new'),",
 		"* cache: generate a playlist for content ",
 		" already in cache.",
 		"Default value is #{opt.strategy}.\n") do |e|
 		opt.strategy = e if e
 	end
-	c.on("-C", "--content REGEXP", 
+	c.on("-C", "--content REGEXP",
 		"A regular expression that matches the",
 		"MIME types of content to be downloaded.",
 		"Examples: '^video/', '^audio/mpeg$'.",
 		"Default value is '', which matches any",
 		"type of content.\n") do |e|
-		begin 
+		begin
 			opt.content_type = Regexp.new(e.downcase) if e
 		rescue Exception
 			$stderr.puts "Error: ignoring regular expression '#{e}'"
-		end 
+		end
 	end
-	c.on("-l", "--language LANG", 
+	c.on("-l", "--language LANG",
 		"A list of language tags separated by",
 		"commas. Examples: 'en-us,de', 'fr'.",
 		"A feed whose language does not match",
@@ -319,7 +319,7 @@ option_parser = OptionParser.new() do |c|
 			opt.language[i] = opt.language[i].split '-'
 		end
 	end
-	c.on("-H", "--horizon DATE", 
+	c.on("-H", "--horizon DATE",
 		"Do not download content older than",
 		"the given date. The date has the format",
 		"yyyy.mm.dd (example: 2007.03.22) or",
@@ -337,27 +337,27 @@ option_parser = OptionParser.new() do |c|
 		rescue ArgumentError
 		end
 	end
-	c.on("-r", "--retries N", 
+	c.on("-r", "--retries N",
 		"Try downloading files (content, feeds",
-		"or subscription lists) at most N times", 
+		"or subscription lists) at most N times",
 		"before giving up. Default value is #{opt.retries}.\n") do |e|
 		opt.retries = e.to_i unless e.to_i<1
 	end
-	c.on("-t", "--type TYPE", opt.PLAYLIST_TYPES, 
+	c.on("-t", "--type TYPE", opt.PLAYLIST_TYPES,
 		"Type of the playlist written to",
 		"standard output. Accepted values are",
 		"#{opt.PLAYLIST_TYPES.join ', '}.",
 		"Default value is #{opt.playlist_type}.\n") do |e|
 		opt.playlist_type = e if e
 	end
-	c.on("-m", "--memsize N", 
+	c.on("-m", "--memsize N",
 		"Remember last N downloaded content,",
-		"and do not download them again. ", 
+		"and do not download them again. ",
 		"0 means unbounded. Default value is #{opt.memsize}.\n") do |e|
 		opt.memsize = e.to_i
 		opt.memsize = nil if opt.memsize<1
 	end
-	c.on("-o", "--order ORDER", opt.ORDERS, 
+	c.on("-o", "--order ORDER", opt.ORDERS,
 		"The order in which feeds are traversed",
 		"when downloading content:",
 		"* random: randomizes the feed order,",
@@ -374,7 +374,7 @@ option_parser = OptionParser.new() do |c|
 		"Default value is #{opt.order}.\n") do |e|
 		opt.order = e if e
 	end
-	c.on("-F", "--function FUNCTION", opt.FUNCTIONS, 
+	c.on("-F", "--function FUNCTION", opt.FUNCTIONS,
 		"Used function:",
 		"* download: downloads content from",
 		" specified feeds,",
@@ -385,16 +385,16 @@ option_parser = OptionParser.new() do |c|
 		"Default value is #{opt.function}.\n") do |e|
 		opt.function = e if e
 	end
-	c.on("-f", "--feeds N", 
-		"Do not download more than N feeds", 
+	c.on("-f", "--feeds N",
+		"Do not download more than N feeds",
 		"(when using the download function),",
-		"or return the first N relevant feeds", 
+		"or return the first N relevant feeds",
 		"(when using the search function).",
 		"0 means unbounded. Default value is #{opt.feeds}.\n") do |e|
 		opt.feeds = e.to_i
 		opt.feeds = nil if opt.feeds<1
 	end
-	c.on("-T", "--torrentdir DIR", 
+	c.on("-T", "--torrentdir DIR",
 		"Copy torrent files to directory DIR.",
 		"The handling of torrents through an",
 		"external BitTorrent client is left to",
@@ -407,13 +407,13 @@ option_parser = OptionParser.new() do |c|
 			opt.torrent_dir = dir
 		end
 	end
-	c.on("-U", "--uploadrate N", 
+	c.on("-U", "--uploadrate N",
 		"Maximum upload rate (kilobytes per second)",
 		"for the internal BitTorrent client.",
 		"#{opt.upload_rate ? 'Default value is '+opt.upload_rate : 'Unbounded by default'}.\n") do |e|
 		opt.upload_rate = e.to_i unless e.to_i<1
 	end
-	c.on("-i", "--itemsize N", 
+	c.on("-i", "--itemsize N",
 		"If downloaded content is less than N MB in",
 		"size (where N is an integer), fetch other",
 		"content of that same feed until this size",
@@ -421,7 +421,7 @@ option_parser = OptionParser.new() do |c|
 		"Default value is #{opt.itemsize}.",
 		"The intent here is to ensure that podcatcher",
 		"downloads about as much content from podcasts",
-		"that frequently post small content (in", 
+		"that frequently post small content (in",
 		"terms of minutes) as it does from podcasts",
 		"that post bigger content less frequently.",
 		"This option was more relevant in the early",
@@ -430,15 +430,15 @@ option_parser = OptionParser.new() do |c|
 		"would rarely need to use this option today.\n") do |e|
 		opt.itemsize = e.to_i unless e.to_i<0
 	end
-	c.on("-c", "--[no-]cache", 
+	c.on("-c", "--[no-]cache",
 		"Generate a playlist for content",
-		"already in cache.", 
+		"already in cache.",
 		"DEPRECATED, use '--strategy cache'.\n") do |e|
 		opt.strategy = :cache if e
 	end
-	c.on("-a", "--[no-]asif", 
+	c.on("-a", "--[no-]asif",
 		"Do not download content, only download",
-		"feeds and subscription lists.", 
+		"feeds and subscription lists.",
 		"Useful for testing.\n") do |e|
 		opt.simulate = e
 	end
@@ -453,28 +453,28 @@ option_parser = OptionParser.new() do |c|
 		puts c.to_s
 		exit
 	end
-	c.on("--[no-]restrictednames", 
-		'In the cache directory, make the names of', 
-		'created subdirectories and files acceptable', 
-		'for restrictive file systems such as VFAT', 
-		'and FAT, which are used on Windows and MP3', 
+	c.on("--[no-]restrictednames",
+		'In the cache directory, make the names of',
+		'created subdirectories and files acceptable',
+		'for restrictive file systems such as VFAT',
+		'and FAT, which are used on Windows and MP3',
 		'player devices.',
 		"Enabled by default.\n") do |e|
 		opt.restricted_names = e
 	end
-	c.on("--[no-]checkforupdate", 
+	c.on("--[no-]checkforupdate",
 		"Check once every #{UPDATE_CHECK_INTERVAL} months if a newer ",
 		"version is available and display an ",
 		"informational message. Enabled by default.\n") do |e|
 		opt.check_for_update = e
 	end
-	c.on("--[no-]vote", 
+	c.on("--[no-]vote",
 		"Automatically vote for the downloaded",
 		"podcasts at podcatcherstats.com.",
 		"Enabled by default.\n") do |e|
 		opt.vote = e
 	end
-	c.on("-A", "--arguments FILENAME_OR_URL", 
+	c.on("-A", "--arguments FILENAME_OR_URL",
 		"Read arguments from specified file.",
 		"Rules:",
 		"* accepts one argument per line,",
@@ -482,7 +482,7 @@ option_parser = OptionParser.new() do |c|
 		"  with #,",
 		"* this option may be used several times",
 		"  in one command.\n") do |e|
-		begin 
+		begin
 			open(e) do |f|
 				loop do
 					line = f.gets
@@ -497,12 +497,12 @@ option_parser = OptionParser.new() do |c|
 			$stderr.puts "Error: arguments file could not be read and will be ignored"
 		end
 	end
-	c.on("-O", "--options FILENAME_OR_URL", 
+	c.on("-O", "--options FILENAME_OR_URL",
 		"Read options from specified file.",
 		"The options file uses the YAML format.\n") do |e|
 		loop do
 			options = nil
-			begin 
+			begin
 				open(e) do |f|
 					options = YAML::load(f)
 				end
@@ -514,7 +514,7 @@ option_parser = OptionParser.new() do |c|
 			options.each() do |option, value|
 				case option.downcase
 				when 'arguments'
-					begin 
+					begin
 						open(value) do |f|
 							loop do
 								line = f.gets
@@ -618,7 +618,7 @@ option_parser = OptionParser.new() do |c|
 						opt.memsize = nil if opt.memsize<1
 					end
 				when 'content'
-					begin 
+					begin
 						opt.content_type = Regexp.new(value.downcase)
 					rescue Exception
 						$stderr.puts "Error: '#{value.downcase}' is not a valid regular expression and will be ignored"
@@ -735,7 +735,7 @@ END
 		end
 		print @str
 		@str
-	end 
+	end
 	def add(content)
 		return unless content
 		if content.mime
@@ -770,13 +770,13 @@ END
 			title.add_text "[#{feed_title}] #{title}"
 			track.add_element title
 			location = Element.new("location")
-			location.add_text fileurl(content.file) 
+			location.add_text fileurl(content.file)
 			track.add_element location
 		end
 		@str += entry
 		print entry
 		entry
-	end 
+	end
 	def finish()
 		res = ""
 		case @playlisttype
@@ -795,18 +795,18 @@ END
 			res = "NumberOfEntries=#{@size}\nVersion=2\n"
 		when :xspf
 			@doc.write $stdout, 0
-		end 
+		end
 		@str += res
 		print res
 		res
-	end 
+	end
 	def to_s()
 		if @doc
 			@doc.to_s
-		else 
+		else
 			@str
 		end
-	end 
+	end
 private
 	def fileurl(path)
 		res = ""
@@ -847,7 +847,7 @@ class Update
 		return unless dir.directory?
 		@file = dir + 'updates'
 		if @file.exist? and @file.file?
-			begin 
+			begin
 				data = nil
 				@file.open() do |f|
 					data = YAML.load f
@@ -874,13 +874,13 @@ class Update
 				@file.delete
 			end
 		end
-		save 
+		save
 		exit 1 unless @file.file?
 	end
 	def check()
 		if @now - @data['last-check'] > 60.0 * 60.0 * 24 * 30 * UPDATE_CHECK_INTERVAL
 			@data['last-check'] = @now
-			begin 
+			begin
 				Net::HTTP.start(@server.host, @server.port) do |http|
 					resp = http.get(@server.path, {'User-Agent' => USER_AGENT, 'Connection' => 'close'})
 					loop do
@@ -889,11 +889,11 @@ class Update
 						break unless doc and doc.root and doc.root.name == 'release'
 						version = XPath.first doc.root, 'version'
 						break unless version
-						break unless newer? version.text 
+						break unless newer? version.text
 						description = XPath.first doc.root, 'description'
 						if description
 							description = description.text.strip
-						else 
+						else
 							description = ''
 						end
 						@data['latest-version'] = version.join '.'
@@ -943,10 +943,10 @@ private
 				end
 				if line
 					line += ' '+word
-				else 
+				else
 					line = word
 				end
-				
+
 			end
 			$stderr.puts p+line if line
 		end
@@ -990,7 +990,7 @@ private
 	def equal?(version)
 		compare_with(version) == 0
 	end
-end 
+end
 
 class Stats
 	def initialize(dir)
@@ -1004,7 +1004,7 @@ class Stats
 		@file = dir + 'votes'
 		if @file.exist? and @file.file?
 			data = nil
-			begin 
+			begin
 				@file.open() do |f|
 					data = YAML.load f
 				end
@@ -1027,7 +1027,7 @@ class Stats
 						@data[key] = value unless @now<value
 					end
 				end
-			else 
+			else
 		#		$stderr.puts "votes file could not be read"
 				save
 			end
@@ -1035,7 +1035,7 @@ class Stats
 		if @data['last-ping']
 			if @data['last-session']
 				@data['last-ping'] = nil if @data['last-session']<@data['last-ping']
-			else 
+			else
 				@data['last-ping'] = nil
 			end
 		end
@@ -1050,7 +1050,7 @@ class Stats
 		max_sent_feeds = 50 #max nb of feed info to be sent
 		#
 		now = Time.now
-		begin 
+		begin
 			loop do
 				break unless opt.vote
 				break unless ping?
@@ -1080,7 +1080,7 @@ class Stats
 					resp = http.request_post @server.path, stats_str, 'User-Agent' => USER_AGENT, 'Content-Type' => 'application/xml', 'Connection' => 'close'
 					if PODCATCHER_ENV != :production
 						$stderr.puts "Received:"
-						$stderr.puts "#{resp.body}" 
+						$stderr.puts "#{resp.body}"
 					end
 					change resp.body
 				end
@@ -1103,7 +1103,7 @@ class Stats
 		return unless query
 		return if opt.simulate
 		now = Time.now
-		begin 
+		begin
 			loop do
 				break unless opt.vote
 				break unless ping?
@@ -1147,9 +1147,9 @@ class Stats
 	end
 private
 	def save()
-		@file.open('w') do |f| 
-			YAML.dump @data, f 
-		end 
+		@file.open('w') do |f|
+			YAML.dump @data, f
+		end
 	end
 	def ping?()
 		r = rand
@@ -1158,7 +1158,7 @@ private
 	end
 	def change(doc_str)
 		return unless doc_str
-		begin 
+		begin
 			change_state = Document.new doc_str
 			loop do
 				break unless change_state
@@ -1190,13 +1190,13 @@ private
 			state.add_attribute('age', age_in_days)
 		end
 	#	return state unless opt
-	#	state.add_attribute('strategy', opt.strategy) 
-	#	state.add_attribute('order', opt.order) 
+	#	state.add_attribute('strategy', opt.strategy)
+	#	state.add_attribute('order', opt.order)
 	#	state.add_attribute('cache', opt.size / 1_000_000) if opt.size
 	#	state.add_attribute('content', opt.content_type.source) if opt.content_type and opt.content_type.source.size<80
 		state
 	end
-end 
+end
 
 class History
 	def initialize(dir)
@@ -1224,9 +1224,9 @@ class History
 				end
 			end
 		end
-	end 
+	end
 	def add(content)
-		begin 
+		begin
 			@history.open("a") do |f|
 				f.puts content.url
 			end
@@ -1235,9 +1235,9 @@ class History
 		rescue Exception
 			$stderr.puts "Error: history file could not be updated"
 		end
-	end 
+	end
 	def trim(limit)
-		begin 
+		begin
 			history_size = 0
 			@history.each_line() do |url|
 				history_size += 1
@@ -1258,10 +1258,10 @@ class History
 		rescue Exception
 			$stderr.puts "Error: failure during history file clean-up."
 		end if limit
-	end 
-end 
+	end
+end
 
-class Cache 
+class Cache
 	def initialize(opt)
 		super()
 		@opt = opt
@@ -1273,7 +1273,7 @@ class Cache
 		@history = History.new opt.dir
 		#stats
 		@stats = Stats.new opt.dir
-		#cache 
+		#cache
 		@cache_dir = opt.cachedir #opt.dir+"cache"
 		@cache_dir.mkdir() unless @cache_dir.exist?
 		exit 1 unless @cache_dir.directory?
@@ -1319,11 +1319,11 @@ class Cache
 						content.size = e2.size
 						content.title = e2.to_s
 						content
-					else 
+					else
 						nil
 					end
 				end
-			else 
+			else
 				nil
 			end
 		end
@@ -1332,8 +1332,8 @@ class Cache
 		@cache.sort!() do |e,e2|
 			e.file.mtime() <=> e2.file.mtime()
 		end
-	end 
-	def createplaylist(urls) 
+	end
+	def createplaylist(urls)
 		playlist = Playlist.new @opt.playlist_type
 		if @opt.strategy == :cache
 			playlist.start
@@ -1348,7 +1348,7 @@ class Cache
 		doc = nil
 		if urls.size == 0
 			$stderr.puts "Reading document from standard input" if @opt.verbose
-			begin 
+			begin
 				xml = ""
 				$stdin.each() do |e|
 					xml += e
@@ -1361,7 +1361,7 @@ class Cache
 			rescue Exception
 				$stderr.puts "Error: unreadable document"
 				doc = nil
-			end 
+			end
 		end
 		dochistory = []
 		feeds = []
@@ -1371,7 +1371,7 @@ class Cache
 			l.url = e
 			l
 		end
-		loop do	
+		loop do
 			break if @opt.feeds and feeds.size >= @opt.feeds
 			while not doc
 				link = links.shift
@@ -1382,13 +1382,13 @@ class Cache
 				end
 				$stderr.puts "Fetching: #{link.url}" if @opt.verbose
 				dochistory << link.url
-				begin 
+				begin
 					doc = fetchdoc(link)
 				rescue Interrupt, SystemExit
 					exit 1
 				rescue Exception
 					$stderr.puts "Error: skipping unreadable document"
-				end 
+				end
 			end
 			break unless doc
 			begin
@@ -1406,7 +1406,7 @@ class Cache
 						url = outline.attributes["xmlUrl"]
 						url = outline.attributes["url"] unless url
 						if url
-							begin 
+							begin
 								url = URI.parse(doc.url).merge(url).to_s if doc.url
 								link = OpenStruct.new
 								link.url = url
@@ -1429,7 +1429,7 @@ class Cache
 					XPath.each(doc.dom,"//link[@rel='feed']") do |outline|
 						url = outline.attributes["href"]
 						next unless url
-						begin 
+						begin
 							url = URI.parse(doc.url).merge(url).to_s if doc.url
 							link = OpenStruct.new
 							link.url = url
@@ -1456,19 +1456,19 @@ class Cache
 							node.value.each() do |e3| #remove line breaks
 								pub_date+= e3.chomp+" "
 							end
-							begin 
+							begin
 								content.pub_date = DateTime.parse(pub_date.strip, true)
 							rescue Exception
-							end 
+							end
 						end
 						content.mime = e2.attributes["type"].downcase
 						next if @opt.content_type !~ content.mime and content.mime != @@TORRENT
 						next if content.mime == @@TORRENT and not (@opt.torrent_dir or @opt.rubytorrent)
 						content.feedurl = doc.url
-						begin 
+						begin
 							content.url = URI.parse(content.feedurl).merge(e2.attributes["href"]).to_s if content.feedurl
 							content.size = e2.attributes["length"].to_i
-							content.size = 2 unless content.size and content.size>0 
+							content.size = 2 unless content.size and content.size>0
 							content.size = 0 if content.mime == @@TORRENT #not strictly necessary
 							feed << content
 						rescue URI::InvalidURIError
@@ -1479,13 +1479,13 @@ class Cache
 						if a.pub_date
 							if b.pub_date
 								b.pub_date <=> a.pub_date
-							else 
+							else
 								-1
 							end
-						else 
+						else
 							if b.pub_date
 								1
-							else 
+							else
 								0
 							end
 						end
@@ -1523,11 +1523,11 @@ class Cache
 								node.value.each() do |e3| #remove line breaks
 									pub_date+= e3.chomp+" "
 								end
-								begin 
+								begin
 									pub_date = DateTime.parse(pub_date.strip, true)
 								rescue Exception
 									pub_date = nil
-								end 
+								end
 							end
 							e1.elements.each() do |e2|
 								if e2.name == "enclosure"
@@ -1538,10 +1538,10 @@ class Cache
 									next if @opt.content_type !~ content.mime and content.mime != @@TORRENT
 									next if content.mime == @@TORRENT and not (@opt.torrent_dir or @opt.rubytorrent)
 									content.feedurl = doc.url
-									begin 
+									begin
 										content.url = URI.parse(content.feedurl).merge(e2.attributes["url"]).to_s if content.feedurl
 										content.size = e2.attributes["length"].to_i
-										content.size = 2 unless content.size and content.size>0 
+										content.size = 2 unless content.size and content.size>0
 										content.size = 0 if content.mime == @@TORRENT #not strictly necessary
 										feed << content
 									rescue URI::InvalidURIError
@@ -1556,10 +1556,10 @@ class Cache
 										next if @opt.content_type !~ content.mime and content.mime != @@TORRENT
 										next if content.mime == @@TORRENT and not (@opt.torrent_dir or @opt.rubytorrent)
 										content.feedurl = doc.url
-										begin 
+										begin
 											content.url = URI.parse(content.feedurl).merge(e2.attributes["url"]).to_s if content.feedurl
 											content.size = e2.attributes["fileSize"].to_i
-											content.size = 2 unless content.size and content.size>0 
+											content.size = 2 unless content.size and content.size>0
 											content.size = 0 if content.mime == @@TORRENT #not strictly necessary
 											feed << content
 										rescue URI::InvalidURIError
@@ -1574,10 +1574,10 @@ class Cache
 												next if @opt.content_type !~ content.mime and content.mime != @@TORRENT
 												next if content.mime == @@TORRENT and not (@opt.torrent_dir or @opt.rubytorrent)
 												content.feedurl = doc.url
-												begin 
+												begin
 													content.url = URI.parse(content.feedurl).merge(e4.attributes["url"]).to_s if content.feedurl
 													content.size = e4.attributes["fileSize"].to_i
-													content.size = 2 unless content.size and content.size>0 
+													content.size = 2 unless content.size and content.size>0
 													content.size = 0 if content.mime == @@TORRENT #not strictly necessary
 													feed << content
 												rescue URI::InvalidURIError
@@ -1586,7 +1586,7 @@ class Cache
 											end
 										end
 									end
-									
+
 								end
 							end if e1.name == "item"
 						end if e.name == "channel"
@@ -1606,13 +1606,13 @@ class Cache
 						if a.pub_date
 							if b.pub_date
 								b.pub_date <=> a.pub_date
-							else 
+							else
 								-1
 							end
-						else 
+						else
 							if b.pub_date
 								1
-							else 
+							else
 								0
 							end
 						end
@@ -1697,7 +1697,7 @@ class Cache
 				feed.slice! in_hist...feed.size if in_hist
 			end
 		when :all
-		else 
+		else
 			feeds.each() do |feed|
 				for i in 0...feed.size
 					feed[i] = nil if feed[i].in_history
@@ -1705,7 +1705,7 @@ class Cache
 				feed.compact!
 			end
 		end
-		if @opt.strategy == :new or @opt.strategy == :one 
+		if @opt.strategy == :new or @opt.strategy == :one
 			feeds.each() do |feed|
 				itemsize = 0
 				index = nil
@@ -1727,13 +1727,13 @@ class Cache
 				if a.size>0
 					if b.size>0
 						rand(3)-1
-					else 
+					else
 						-1
 					end
-				else 
+				else
 					if b.size>0
 						1
-					else 
+					else
 						0
 					end
 				end
@@ -1743,13 +1743,13 @@ class Cache
 				if a.size>0
 					if b.size>0
 						a[0].feed_title <=> b[0].feed_title
-					else 
+					else
 						-1
 					end
-				else 
+				else
 					if b.size>0
 						1
-					else 
+					else
 						0
 					end
 				end
@@ -1782,7 +1782,7 @@ class Cache
 			feed.each() do |content|
 				next if content.mime != @@TORRENT
 				content.mime = nil
-				begin 
+				begin
 					$stderr.puts "Fetching torrent metainfo: #{content.url}" if @opt.verbose
 					content.metainfo = RubyTorrent::MetaInfo.from_location content.url
 					content.size = content.metainfo.info.length
@@ -1803,9 +1803,9 @@ class Cache
 							"video/x-ms-asf"
 						when /\.m4v$|\.mp4$|\.mpg4$/
 							"video/mp4"
-						else 
+						else
 							nil
-						end 
+						end
 					content.url = nil unless content.mime
 					content.url = nil unless (@opt.content_type =~ content.mime)
 					content.url = nil unless content.metainfo.info.single?
@@ -1817,7 +1817,7 @@ class Cache
 				rescue Exception
 					content.url = nil
 					$stderr.puts "Error: unreadable torrent metainfo" if @opt.verbose
-				end 
+				end
 			end
 			for i in 0...feed.size
 				feed[i] = nil unless feed[i].url
@@ -1850,11 +1850,11 @@ class Cache
 					total-= f.size
 					parent = f.file.parent
 					$stderr.puts "Deleting: #{f.file}" if @opt.verbose
-					f.file.delete 
+					f.file.delete
 					if parent.parent != @opt.dir and parent.entries.size == 2
 						#delete empty feed subfolder
 						$stderr.puts "Deleting: #{parent}" if @opt.verbose
-						parent.delete 
+						parent.delete
 					end
 				end
 				unless @opt.simulate
@@ -1862,7 +1862,7 @@ class Cache
 				end
 				#download
 				1.upto(@opt.retries) do |i|
-					begin 
+					begin
 						if content.metainfo
 							if @opt.torrent_dir
 								loop do
@@ -1871,7 +1871,7 @@ class Cache
 									sleep 1
 								end
 								$stderr.puts "Copying: #{content.url} to #{content.file}" if @opt.verbose and i == 1
-								if not @opt.simulate 
+								if not @opt.simulate
 									if content.feedurl and (content.feedurl =~ %r{^http:} or content.feedurl =~ %r{^ftp:})
 										open(content.url, "User-Agent" => USER_AGENT, "Referer" => content.feedurl) do |fin|
 											content.file.open("wb") do |fout|
@@ -1880,7 +1880,7 @@ class Cache
 												end
 											end
 										end
-									else 
+									else
 										open(content.url, "User-Agent" => USER_AGENT) do |fin|
 											content.file.open("wb") do |fout|
 												fin.each_byte() do |b|
@@ -1902,18 +1902,18 @@ class Cache
 								inc+= content.size
 								itemsize+= content.size
 							end
-						else 
+						else
 							$stderr.puts "Fetching: #{content.url} (#{content.size.to_s} bytes)" if @opt.verbose and i == 1
-							if not @opt.simulate 
+							if not @opt.simulate
 								headers = {"User-Agent" => USER_AGENT}
 								headers["Referer"] = content.feedurl if content.feedurl and (content.feedurl =~ %r{^http:} or content.feedurl =~ %r{^ftp:})
 								content.download_url = content.url unless content.download_url
 								open(content.download_url, headers) do |fin|
-									if fin.base_uri.instance_of?(URI::HTTP) 
-										if fin.status[0] =~ Regexp.new('^3') 
+									if fin.base_uri.instance_of?(URI::HTTP)
+										if fin.status[0] =~ Regexp.new('^3')
 											content.download_url = fin.meta['location']
 											raise "redirecting"
-										elsif fin.status[0] !~ Regexp.new('^2') 
+										elsif fin.status[0] !~ Regexp.new('^2')
 											raise 'failed'
 										end
 									end
@@ -1928,7 +1928,7 @@ class Cache
 									end
 								end
 								content.size = content.file.size
-								@history.add content 
+								@history.add content
 							end
 							playlist.add(content)
 							inc+= content.size
@@ -1939,7 +1939,7 @@ class Cache
 					rescue SystemExit
 						exit 1
 					rescue Exception
-					end 
+					end
 					$stderr.puts "Attempt #{i} aborted" if @opt.verbose
 					if content.file and i == @opt.retries
 						if content.file.exist?
@@ -1959,7 +1959,7 @@ class Cache
 				itemsize = 0
 			end
 			total+=inc
-		end 
+		end
 		#shut down torrents
 		if torrents.length > 0
 			$stderr.puts "Fetching torrents (duration: 30min to a couple of hours) " if @opt.verbose
@@ -1971,27 +1971,27 @@ class Cache
 				sleep 30*60
 				for i in 0...torrents.length
 					c = torrents[i].percent_completed
-					complete = torrents[i].complete? 
+					complete = torrents[i].complete?
 					$stderr.puts "Fetched: #{c}% of #{torrentfiles[i].url} " if @opt.verbose
 					if complete or c == completion[i]
-						begin 
+						begin
 							torrents[i].shutdown
 						rescue SystemExit
 							exit 1
 						rescue Interrupt, Exception
-						end 
+						end
 						if complete
 							playlist.add(torrentfiles[i])
 							@history.add torrentfiles[i]
-						else                                                        
+						else
 							$stderr.puts "Aborted: #{torrentfiles[i].url}" if @opt.verbose
-							begin 
+							begin
 								torrentfiles[i].file.delete if torrentfiles[i].file.exist?
 								torrentfiles[i] = nil
 							rescue Interrupt, SystemExit
 								exit 1
 							rescue Exception
-							end 
+							end
 						end
 						torrents[i] = nil
 						torrentfiles[i] = nil
@@ -1999,12 +1999,12 @@ class Cache
 						next
 					end
 					completion[i] = c
-				end 
+				end
 				torrents.compact!
 				torrentfiles.compact!
 				completion.compact!
 			end
-			begin 
+			begin
 				bt.shutdown_all
 			rescue Interrupt, SystemExit
 				exit 1
@@ -2015,12 +2015,12 @@ class Cache
 		playlist.finish
 		@history.trim(@opt.memsize) unless @opt.simulate or @opt.strategy == :cache
 		playlist.to_s
-	end 
+	end
 private
 	def fetchdoc(link)
 		doc = ""
 		1.upto(@opt.retries) do |i|
-			begin 
+			begin
 				if link.url =~ %r{^http:} or link.url =~ %r{^ftp:}
 					if link.referrer and (link.referrer =~ %r{^http:} or link.referrer =~ %r{^ftp:})
 						open(link.url, "User-Agent" => USER_AGENT, "Referer" => link.referrer) do |f|
@@ -2030,7 +2030,7 @@ private
 								doc += e
 							end
 						end
-					else 
+					else
 						open(link.url, "User-Agent" => USER_AGENT) do |f|
 							break if f.content_type.index "audio/"
 							break if f.content_type.index "video/"
@@ -2039,7 +2039,7 @@ private
 							end
 						end
 					end
-				else 
+				else
 					open(link.url) do |f|
 						f.each_line() do |e|
 							doc += e
@@ -2051,23 +2051,23 @@ private
 			rescue SystemExit
 				exit 1
 			rescue Exception
-			end 
+			end
 			$stderr.puts "Attempt #{i} aborted" if @opt.verbose
 			doc = ""
 			sleep 5
 		end
 		res = OpenStruct.new
-		begin 
+		begin
 			res.dom = Document.new doc
 		rescue Exception
-		end 
+		end
 		if res.dom
 			res.url = link.url
-		else 
+		else
 			res = nil
 		end
 		res
-	end 
+	end
 	def filename(content, dir) #produce filename for content to be downloaded
 		begin #per-feed subfolder
 			if @opt.per_feed and content.feed_title and content.feed_title.size > 0
@@ -2077,7 +2077,7 @@ private
 					if newdir.directory?
 						dir = newdir
 					end
-				else 
+				else
 					newdir.mkdir
 					dir = newdir
 				end
@@ -2087,11 +2087,11 @@ private
 		end
 		ext = [""]
 		if content.metainfo
-			begin 
+			begin
 				ext = ["."+content.metainfo.info.name.split(".").reverse[0]]
 			rescue Exception
-			end 
-		else 
+			end
+		else
 			ext = case content.mime.downcase
 				when "audio/mpeg"
 					[".mp3"]
@@ -2117,15 +2117,15 @@ private
 					[".m4v", ".mp4",".mpg4"]
 				else
 					[""]
-				end 
+				end
 		end
 		#name from url?
 		name = nil
-		begin 
+		begin
 			if content.metainfo
 				name = content.metainfo.info.name
 				name = nil if (dir+name).exist?
-			else 
+			else
 				urlname = nil
 				urlname = URI.split(content.redirection_url)[5].split("/")[-1] if content.redirection_url
 				urlname = URI.split(content.url)[5].split("/")[-1] unless urlname
@@ -2139,7 +2139,7 @@ private
 				end
 			end
 		rescue Exception
-		end 
+		end
 		#unique name?
 		loop do
 			name = Time.now.to_f.to_s+ext[0]
@@ -2147,7 +2147,7 @@ private
 			sleep 1
 		end unless name
 		dir+name
-	end 
+	end
 end
 class OPML
 	def initialize(title = nil)
@@ -2173,14 +2173,14 @@ class OPML
 		e.add_attribute "url", feedurl
 		@body.add_element e
 		@size += 1
-	end 
+	end
 	def write()
 		@doc.write $stdout, 0
 	end
 	def size()
 		@size
-	end 
-end 
+	end
+end
 
 class Query
 	def initialize(opt, query)
@@ -2195,13 +2195,13 @@ class Query
 	end
 	def search(urls)
 		res = []
-		begin 
+		begin
 			newpaths = []
 			dochistory = []
 			paths = []
 			if urls.size == 0
 				$stderr.puts "Reading subscriptions from standard input" if @opt.verbose
-				begin 
+				begin
 					xml = ""
 					$stdin.each() do |e|
 						xml += e
@@ -2216,8 +2216,8 @@ class Query
 					raise
 				rescue Exception
 					$stderr.puts "Error: unreadable subscriptions"
-				end 
-			else 
+				end
+			else
 				newpaths = urls.uniq.collect() do |e|
 					path = OpenStruct.new
 					path.url = e
@@ -2230,7 +2230,7 @@ class Query
 					if path.doc
 						path.relevance = 0
 						path
-					else 
+					else
 						$stderr.puts "Skipping unreadable document" if @opt.verbose
 						nil
 					end
@@ -2277,7 +2277,7 @@ class Query
 							url = outline.attributes["xmlUrl"]
 							url = outline.attributes["url"] unless url
 							next unless url
-							begin 
+							begin
 								url = URI.parse(path.url).merge(url).to_s if path.url
 							rescue Interrupt, SystemExit
 								raise
@@ -2301,7 +2301,7 @@ class Query
 							next unless link
 							url = link.attributes["href"]
 							next unless url
-							begin 
+							begin
 								url = URI.parse(path.url).merge(url).to_s if path.url
 							rescue Interrupt, SystemExit
 								raise
@@ -2320,7 +2320,7 @@ class Query
 					elsif path.doc.root.namespace =~ @@ATOM_NS and path.url
 						#doc relevance
 						title = nil
-						begin 
+						begin
 							XPath.each(path.doc.root,"/*/*") do |e|
 								next unless e.namespace =~ @@ATOM_NS
 								next unless e.name == "title" or e.name == "subtitle"
@@ -2331,7 +2331,7 @@ class Query
 							raise
 						rescue Exception
 							#$stderr.puts "error: #{$!}"
-						end 
+						end
 						if path.relevance > 0
 							$stderr.puts "Found: #{title} (relevance: #{path.relevance})" if @opt.verbose
 							if title
@@ -2348,7 +2348,7 @@ class Query
 						title = XPath.first(path.doc, "//channel/title/text()")
 						path.relevance += relevance_of(title)
 						path.relevance += relevance_of(XPath.first(path.doc, "//channel/description/text()"))
-						begin 
+						begin
 							XPath.each(path.doc.root,"//channel/*") do |e|
 								next unless e.name == "category"
 								if e.namespace == @@ITUNES_NS
@@ -2356,15 +2356,15 @@ class Query
 										next unless e2.name == "category"
 										path.relevance += relevance_of(e2.attributes["text"])
 									end
-								else 
-									path.relevance += relevance_of(e.text) 
+								else
+									path.relevance += relevance_of(e.text)
 								end
 							end
 						rescue Interrupt, SystemExit
 							raise
 						rescue Exception
 							#$stderr.puts "error: #{$!}"
-						end 
+						end
 						if path.relevance > 0
 							$stderr.puts "Found: #{title} (relevance: #{path.relevance})" if @opt.verbose
 							if title
@@ -2381,15 +2381,15 @@ class Query
 					raise
 				rescue Exception
 					$stderr.puts "Error: skipping unreadable document"
-				end 
+				end
 			end
 		rescue Interrupt, SystemExit
 			$stderr.puts "Execution interrupted"
 		rescue Exception
-		end 
+		end
 		result = nil
 		while not result
-			begin 
+			begin
 				res.sort!() do |path1, path2|
 					path2.relevance <=> path1.relevance
 				end
@@ -2399,11 +2399,11 @@ class Query
 				end
 				result = opml
 			rescue Exception
-			end 
+			end
 		end
 		result.write
 		result
-	end 
+	end
 private
 	def relevance_of(meta)
 		return 0 unless meta
@@ -2419,11 +2419,11 @@ private
 			end
 		end
 		res
-	end 
+	end
 	def fetchdoc(link)
 		doc = ""
 		1.upto(@opt.retries) do |i|
-			begin 
+			begin
 				if link.url =~ %r{^http:} or link.url =~ %r{^ftp:}
 					if link.referrer and (link.referrer =~ %r{^http:} or link.referrer =~ %r{^ftp:})
 						open(link.url, "User-Agent" => USER_AGENT, "Referer" => link.referrer) do |f|
@@ -2433,7 +2433,7 @@ private
 								doc += e
 							end
 						end
-					else 
+					else
 						open(link.url, "User-Agent" => USER_AGENT) do |f|
 							break if f.content_type.index "audio/"
 							break if f.content_type.index "video/"
@@ -2442,7 +2442,7 @@ private
 							end
 						end
 					end
-				else 
+				else
 					open(link.url) do |f|
 						f.each_line() do |e|
 							doc += e
@@ -2454,24 +2454,24 @@ private
 			rescue SystemExit
 				break
 			rescue Exception
-			end 
+			end
 			$stderr.puts "Attempt #{i} aborted" if @opt.verbose
 			doc = ""
 			sleep 5
 		end
 		res = nil
-		begin 
+		begin
 			res = Document.new doc
 		rescue Exception
-		end 
+		end
 		res = nil unless res and res.root
 		res
-	end 
+	end
 end
 
 opt.size *= 1_000_000 if opt.size
 opt.upload_rate *= 1024 if opt.upload_rate
-opt.itemsize *= 1_000_000 
+opt.itemsize *= 1_000_000
 arguments = arguments + ARGV
 
 unless opt.check_for_update
@@ -2482,7 +2482,7 @@ unless opt.vote
 	$stderr.puts "Disabling the sending of anonymous usage statistics." if opt.verbose
 end
 
-begin 
+begin
 	require "rubytorrent"
 	opt.rubytorrent = true
 	$stderr.puts "RubyTorrent detected." if opt.verbose
