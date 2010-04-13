@@ -2097,7 +2097,7 @@ private
     else
       ext = case content.mime.downcase
         when "audio/mpeg"
-          [".mp3"]
+          [".mp3", ".m4a"]
         when "audio/x-mpeg"
           [".mp3"]
         when "audio/x-ms-wma"
