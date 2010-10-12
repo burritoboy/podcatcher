@@ -2088,67 +2088,26 @@ private
     rescue Exception
     # $stderr.puts "error: #{$!}"
     end
-    ext = [""]
+
     if content.metainfo
       begin
-        ext = ["."+content.metainfo.info.name.split(".").reverse[0]]
+        name = content.metainfo.info.name
       rescue Exception
       end
     else
-      ext = case content.mime.downcase
-        when "audio/mpeg"
-          [".mp3", ".m4a"]
-        when "audio/x-mpeg"
-          [".mp3"]
-        when "audio/x-ms-wma"
-          [".wma"]
-        when "audio/x-m4a"
-          [".m4a"]
-        when "video/mpeg"
-          [".mpg",".mpeg",".mpe",".mpa",".mp2",".mpv2"]
-        when "video/quicktime"
-          [".mov",".qt"]
-        when "video/x-msvideo"
-          [".avi"]
-        when "video/x-ms-wmv"
-          [".wmv"]
-        when "video/x-ms-asf"
-          [".asf"]
-        when "video/mp4"
-          [".m4v", ".mp4",".mpg4"]
-        when "video/x-m4v"
-          [".m4v", ".mp4",".mpg4"]
-        else
-          [""]
-        end
+      urlname = nil
+      urlname = URI.split(content.redirection_url)[5].split("/")[-1] if content.redirection_url
+      urlname = URI.split(content.url)[5].split("/")[-1] unless urlname
+      name = URI.unescape(urlname)
     end
-    #name from url?
-    name = nil
-    begin
-      if content.metainfo
-        name = content.metainfo.info.name
-        name = nil if (dir+name).exist?
-      else
-        urlname = nil
-        urlname = URI.split(content.redirection_url)[5].split("/")[-1] if content.redirection_url
-        urlname = URI.split(content.url)[5].split("/")[-1] unless urlname
-        ext.each() do |e|
-          if e.length == 0 or urlname[-e.length..-1].downcase == e
-            name = urlname
-            name = URI.unescape(name)
-            name = nil if (dir+name).exist?
-            break if name
-          end
-        end
-      end
-    rescue Exception
-    end
+    orig_name = name if (dir+name).exist?
+
     #unique name?
     loop do
-      name = Time.now.to_f.to_s+ext[0]
+      name = "#{Time.now.to_i.to_s}.#{orig_name}"
       break unless (dir+name).exist?
       sleep 1
-    end unless name
+    end if (dir+name).exist?
     dir+name
   end
 end
